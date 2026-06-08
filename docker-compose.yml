@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  db:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+
+  api:
+    build: ./backend
+    environment:
+      - MONGO_URL=mongodb://db:27017
+    depends_on:
+      - db
+    restart: always
+
+  ui:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+    restart: always
+
+volumes:
+  mongo-data:
